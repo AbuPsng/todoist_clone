@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  tasks         Task[]
+  projects      Project[]
+  memberships   ProjectMembership[]
+  assignedTasks TaskAssignee[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Foreign keys
+  ownerId String
+
+  // Self-relation for nested projects
+  parentId    String?
+  parent      Project?  @relation("SubProjects", fields: [parentId], references: [id])
+  subProjects Project[] @relation("SubProjects")
+
+  // Relations
+  owner       User                @relation(fields: [ownerId], references: [id])
+  tasks       Task[]
+  memberships ProjectMembership[]
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  //  Foreign keys
+  userId    String
+  projectId String
+
+  // Relations
+  user      User           @relation(fields: [userId], references: [id])
+  project   Project        @relation(fields: [projectId], references: [id])
+  assignees TaskAssignee[]
+
+  @@index([userId]) // Index for faster lookups by user
+  @@index([projectId]) // Index for faster lookups by project
+}
+
+model ProjectMembership {
+  id        String @id @default(uuid())
+  userId    String
+  projectId String
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, projectId])
+}
+
+model TaskAssignee {
+  id     String @id @default(uuid())
+  userId String
+  taskId String
+
+  user User @relation(fields: [userId], references: [id])
+  task Task @relation(fields: [taskId], references: [id])
+
+  @@unique([userId, taskId])
+}
