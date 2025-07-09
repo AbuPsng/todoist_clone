@@ -1,5 +1,5 @@
 import { UserRegistrationType } from "@/types/services/user.services.types";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db/db";
 
 export const createUser = async (userData: UserRegistrationType) => {
 	// Logic to create a user in the database

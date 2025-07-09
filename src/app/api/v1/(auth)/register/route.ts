@@ -1,10 +1,11 @@
 import { createUser, findUserByEmail } from "@/server/services/user.services";
+import { generateHashPassword } from "@/lib/auth/auth.lib";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
-import { sendMail } from "@/lib/sendMail";
+import { sendMail } from "@/lib/mail/sendMail";
 import { apiError } from "@/lib/apiError";
 import { randomBytes } from "crypto";
-import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
 	const { email, name, password, confirmPassword } = await req.json();
@@ -19,6 +20,8 @@ export const POST = asyncHandler(async (req: Request) => {
 		return apiError("Passwords do not match", 400);
 	}
 
+	const hashedPassword = await generateHashPassword(password);
+
 	// "Check if email is valid";
 	const existingUser = await findUserByEmail(email);
 
@@ -26,12 +29,12 @@ export const POST = asyncHandler(async (req: Request) => {
 		return apiError("User already exists", 400);
 	}
 
-	const newUser = await createUser({ email, name, password });
+	const newUser = await createUser({ email, name, password: hashedPassword });
 
 	if (!newUser) {
 		return apiError("User creation failed", 500);
 	}
-	const verificationToken = randomBytes(32).toString("hex");
+	const verificationToken = randomBytes(6).toString("hex");
 
 	await prisma.user.update({
 		where: { id: newUser.id },
@@ -41,9 +44,9 @@ export const POST = asyncHandler(async (req: Request) => {
 	await sendMail({
 		to: email,
 		subject: "Verify your email",
-		token: verificationToken,
+		verificationToken,
+		username: newUser.name,
 	});
-	console.log("hero");
 
 	return apiResponse("User created successfully", 201);
 });
