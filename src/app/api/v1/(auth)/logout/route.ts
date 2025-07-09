@@ -2,7 +2,7 @@ import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
 import { cookies } from "next/headers";
 
-export const Get = asyncHandler(async (req: Request, res: Response) => {
+export const GET = asyncHandler(async (req: Request, res: Response) => {
 	const cookieStore = await cookies();
 
 	cookieStore.set("jwtToken", "", {

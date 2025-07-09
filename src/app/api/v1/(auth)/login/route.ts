@@ -1,19 +1,24 @@
 import { findUserByEmail } from "@/server/services/user.services";
+import { userLoginInputSchema } from "@/zod/user.schema";
 import { comparePassword } from "@/lib/auth/auth.lib";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
-import { NextResponse } from "next/server";
 import { apiError } from "@/lib/apiError";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
 export const POST = asyncHandler(async (req: Request, res: Response) => {
-	const { email, password } = await req.json();
+	const body = await req.json();
 
-	// "Check if all fields are provided";
-	if (!email || !password) {
-		return apiError("All fields are required", 400);
+	// Validate the request body using Zod schema
+	const parsed = userLoginInputSchema.safeParse(body);
+
+	if (!parsed.success) {
+		// Zod found issues — return first error
+		const errorMessage = parsed.error.errors[0].message;
+		return apiError(errorMessage, 400);
 	}
+	const { email, password } = parsed.data;
 
 	// "Check if email is valid";
 	const existingUser = await findUserByEmail(email);

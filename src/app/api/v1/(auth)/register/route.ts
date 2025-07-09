@@ -1,4 +1,5 @@
 import { createUser, findUserByEmail } from "@/server/services/user.services";
+import { userRegisterInputSchema } from "@/zod/user.schema";
 import { generateHashPassword } from "@/lib/auth/auth.lib";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
@@ -8,18 +9,17 @@ import { randomBytes } from "crypto";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
-	const { email, name, password, confirmPassword } = await req.json();
+	const body = await req.json();
 
-	// "Check if all fields are provided";
-	if (!email || !name || !password || !confirmPassword) {
-		return apiError("All fields are required", 400);
+	// Validate the request body using Zod schema
+	const parsed = userRegisterInputSchema.safeParse(body);
+
+	if (!parsed.success) {
+		// Zod found issues — return first error
+		const errorMessage = parsed.error.errors[0].message;
+		return apiError(errorMessage, 400);
 	}
-
-	// Checking if password and confirmPassword match
-	if (password !== confirmPassword) {
-		return apiError("Passwords do not match", 400);
-	}
-
+	const { email, name, password } = parsed.data;
 	const hashedPassword = await generateHashPassword(password);
 
 	// "Check if email is valid";

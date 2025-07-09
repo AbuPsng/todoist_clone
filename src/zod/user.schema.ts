@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const userRegisterFormSchema = z
+export const userRegisterInputSchema = z
 	.object({
 		email: z.string().email("Invalid email address"),
 		name: z
@@ -16,7 +16,7 @@ export const userRegisterFormSchema = z
 		message: "Passwords do not match",
 	});
 
-export const userLoginFormSchema = z.object({
+export const userLoginInputSchema = z.object({
 	email: z.string().email("Invalid email address"),
 	password: z.string().min(8, "Password must be at least 8 characters long"),
 });

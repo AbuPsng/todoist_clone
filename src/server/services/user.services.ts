@@ -1,7 +1,7 @@
-import { UserRegistrationType } from "@/types/services/user.services.types";
+import { UserRegistrationInputType } from "@/types/services/user.services.types";
 import { prisma } from "@/lib/db/db";
 
-export const createUser = async (userData: UserRegistrationType) => {
+export const createUser = async (userData: UserRegistrationInputType) => {
 	// Logic to create a user in the database
 
 	const newUser = await prisma.user.create({
@@ -33,7 +33,7 @@ export const findUserById = async (id: string) => {
 
 export const updateUser = async (
 	id: string,
-	userData: Partial<UserRegistrationType>
+	userData: Partial<UserRegistrationInputType>
 ) => {
 	// Logic to update a user in the database
 
