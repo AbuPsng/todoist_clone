@@ -1,11 +1,10 @@
 import { createUser, findUserByEmail } from "@/server/services/user.services";
+import { generateHashPassword, generateToken } from "@/lib/auth/auth.lib";
 import { userRegisterInputSchema } from "@/zod/user.schema";
-import { generateHashPassword } from "@/lib/auth/auth.lib";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
 import { sendMail } from "@/lib/mail/sendMail";
-import { apiError } from "@/lib/apiError";
-import { randomBytes } from "crypto";
+import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
@@ -17,7 +16,7 @@ export const POST = asyncHandler(async (req: Request) => {
 	if (!parsed.success) {
 		// Zod found issues — return first error
 		const errorMessage = parsed.error.errors[0].message;
-		return apiError(errorMessage, 400);
+		throw new ApiError(errorMessage, 400);
 	}
 	const { email, name, password } = parsed.data;
 	const hashedPassword = await generateHashPassword(password);
@@ -26,15 +25,15 @@ export const POST = asyncHandler(async (req: Request) => {
 	const existingUser = await findUserByEmail(email);
 
 	if (existingUser) {
-		return apiError("User already exists", 400);
+		throw new ApiError("User already exists", 400);
 	}
 
 	const newUser = await createUser({ email, name, password: hashedPassword });
 
 	if (!newUser) {
-		return apiError("User creation failed", 500);
+		throw new ApiError("User creation failed", 500);
 	}
-	const verificationToken = randomBytes(6).toString("hex");
+	const verificationToken = generateToken(32);
 
 	await prisma.user.update({
 		where: { id: newUser.id },

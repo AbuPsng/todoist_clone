@@ -3,9 +3,9 @@ import { userLoginInputSchema } from "@/zod/user.schema";
 import { comparePassword } from "@/lib/auth/auth.lib";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
-import { apiError } from "@/lib/apiError";
+import { signJWT } from "@/lib/auth/jose.lib";
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import ApiError from "@/lib/ApiError";
 
 export const POST = asyncHandler(async (req: Request, res: Response) => {
 	const body = await req.json();
@@ -16,7 +16,7 @@ export const POST = asyncHandler(async (req: Request, res: Response) => {
 	if (!parsed.success) {
 		// Zod found issues — return first error
 		const errorMessage = parsed.error.errors[0].message;
-		return apiError(errorMessage, 400);
+		throw new ApiError(errorMessage, 400);
 	}
 	const { email, password } = parsed.data;
 
@@ -24,23 +24,22 @@ export const POST = asyncHandler(async (req: Request, res: Response) => {
 	const existingUser = await findUserByEmail(email);
 
 	if (!existingUser) {
-		return apiError("User does not exists", 400);
+		throw new ApiError("User does not exists", 400);
 	}
 	// "Check if user is verified";
 	if (!existingUser.isVerified) {
-		return apiError("User is not verified", 400);
+		throw new ApiError("User is not verified", 400);
 	}
 
 	// "Check if password is correct";
 	const isPasswordValid = await comparePassword(password, existingUser.password);
 
 	if (!isPasswordValid) {
-		return apiError("Invalid password", 400);
+		throw new ApiError("Invalid password", 400);
 	}
 
-	const jwtToken = jwt.sign(
+	const jwtToken = await signJWT(
 		{ id: existingUser.id, email: existingUser.email },
-		process.env.JWT_SECRET!,
 		{ expiresIn: "24h" }
 	);
 

@@ -1,7 +1,7 @@
 import EmailTemplate from "@/lib/mail/EmailTemplate";
 import { Resend } from "resend";
 
-import { apiError } from "../apiError";
+import ApiError from "../ApiError";
 
 type EmailTemplateProps = {
 	to: string;
@@ -27,11 +27,11 @@ export const sendMail = async ({
 		});
 
 		if (error) {
-			throw apiError(error.message || "Failed to send email", 500);
+			throw new ApiError(error.message || "Failed to send email", 500);
 		}
 		console.log(data);
 	} catch (error: any) {
 		console.log(error, "mail");
-		throw apiError(error?.message || "Failed to send email", 500);
+		throw new ApiError(error?.message || "Failed to send email", 500);
 	}
 };

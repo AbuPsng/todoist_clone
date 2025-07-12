@@ -1,7 +1,7 @@
 export function apiResponse(
 	message: string,
 	status: number = 200,
-	meta?: Record<string, any>
+	data?: Record<string, any>
 ): Response {
 	const isSuccess = status >= 200 && status < 300;
 
@@ -9,7 +9,7 @@ export function apiResponse(
 		JSON.stringify({
 			success: isSuccess,
 			message,
-			...(meta && { meta }),
+			...(data && { data }),
 		}),
 		{
 			status,

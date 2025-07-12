@@ -44,3 +44,13 @@ export const updateUser = async (
 
 	return updatedUser;
 };
+
+export const checkIfUserExist = async (id: string): Promise<boolean> => {
+	// Logic to find a user by ID in the database
+
+	const user = await prisma.user.findUnique({
+		where: { id },
+	});
+
+	return !!user;
+};

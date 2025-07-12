@@ -29,7 +29,10 @@ model User {
   tasks         Task[]
   projects      Project[]
   memberships   ProjectMembership[]
-  assignedTasks TaskAssignee[]
+
+
+  taskAssignedToMe TaskAssignee[] @relation("AssigneeUser") // tasks I received
+  taskAssignedByMe  TaskAssignee[] @relation("AssignerUser")
 }
 
 model Project {
@@ -89,12 +92,16 @@ model ProjectMembership {
 }
 
 model TaskAssignee {
-  id     String @id @default(uuid())
-  userId String
-  taskId String
+  id          String   @id @default(uuid())
+  assigneeId      String   // Who is being assigned
+  taskId      String   // The task assigned
+  assignerId  String   // Who assigned the task (userId of assigner)
+  assignedAt  DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
-  task Task @relation(fields: [taskId], references: [id])
+  user        User     @relation("AssigneeUser", fields: [assigneeId], references: [id])
+  task        Task     @relation(fields: [taskId], references: [id])
+  assigner    User     @relation("AssignerUser", fields: [assignerId], references: [id])
 
-  @@unique([userId, taskId])
+  @@unique([assigneeId, taskId])
 }
+

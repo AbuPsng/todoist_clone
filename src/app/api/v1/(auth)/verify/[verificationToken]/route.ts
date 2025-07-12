@@ -1,6 +1,6 @@
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
-import { apiError } from "@/lib/apiError";
+import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const GET = asyncHandler(
@@ -8,14 +8,14 @@ export const GET = asyncHandler(
 		const { verificationToken } = context.params;
 
 		if (!verificationToken) {
-			return apiError("Verification token is required", 400);
+			throw new ApiError("Verification token is required", 400);
 		}
 		const user = await prisma.user.findFirst({
 			where: { verificationToken },
 		});
 
 		if (!user) {
-			return apiError("Invalid verification token", 400);
+			throw new ApiError("Invalid verification token", 400);
 		}
 
 		const verifiedUser = await prisma.user.update({
@@ -24,7 +24,7 @@ export const GET = asyncHandler(
 		});
 
 		if (!verifiedUser) {
-			return apiError("Failed to verify user", 500);
+			throw new ApiError("Failed to verify user", 500);
 		}
 
 		return apiResponse("User verified successfully", 200);

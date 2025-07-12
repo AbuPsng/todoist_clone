@@ -1,9 +1,9 @@
 import { randomBytes } from "crypto";
+import bcrypt from "bcryptjs";
 
 export const generateHashPassword = async (
 	password: string
 ): Promise<string> => {
-	const bcrypt = await import("bcryptjs");
 	return bcrypt.hash(password, 10);
 };
 

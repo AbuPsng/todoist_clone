@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
 
 import { asyncHandler } from "./lib/asyncHandler";
-import { apiError } from "./lib/apiError";
+import { verifyJWT } from "./lib/auth/jose.lib";
+import ApiError from "./lib/ApiError";
 
 export const middleware = asyncHandler(async (req: Request) => {
 	const cookie = await cookies();
 
 	const jwtToken = cookie.get("jwtToken");
 	if (!jwtToken) {
-		return apiError("Unauthorized", 401);
+		throw new ApiError("Unauthorized", 401);
 	}
-	jwt.verify(jwtToken.value, process.env.JWT_SECRET!);
+	verifyJWT(jwtToken.value);
+	console.log("perfect");
 	return NextResponse.next();
 });
 
