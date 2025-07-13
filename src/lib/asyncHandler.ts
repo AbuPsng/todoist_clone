@@ -6,6 +6,7 @@ export function asyncHandler<
 		try {
 			return await handler(...args);
 		} catch (error: any) {
+			console.log(error, "error from asyncHandler");
 			return new Response(
 				JSON.stringify({ success: false, message: error.message }),
 				{ status: error.statusCode }

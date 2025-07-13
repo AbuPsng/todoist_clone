@@ -48,7 +48,6 @@ export const DELETE = asyncHandler(
 	async (req: Request, { params }: { params: Promise<{ taskId: string }> }) => {
 		const taskId = await getAndValidateTaskId(params);
 
-		console.log("here");
 		await prisma.task.delete({
 			where: { id: taskId },
 		});

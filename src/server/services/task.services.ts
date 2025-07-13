@@ -63,6 +63,14 @@ export const getAllTaskByQuery = async ({
 			...(title && { title: { contains: title, mode: "insensitive" } }),
 			...(dueDate && { dueDate: new Date(dueDate) }),
 		},
+		select: {
+			id: true,
+			title: true,
+			description: true,
+			completed: true,
+			createdAt: true,
+			dueDate: true,
+		},
 		orderBy: {
 			createdAt: order,
 		},

@@ -40,7 +40,7 @@ export const POST = asyncHandler(async (req: Request, res: Response) => {
 
 	const jwtToken = await signJWT(
 		{ id: existingUser.id, email: existingUser.email },
-		{ expiresIn: "24h" }
+		{ expiresIn: "7d" }
 	);
 
 	const cookieStore = await cookies();
