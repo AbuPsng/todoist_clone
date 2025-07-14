@@ -1,4 +1,5 @@
 import { assertProjectOwnershipOrThrow } from "@/server/services/project.services";
+import { getRootProjectDetail } from "@/lib/project/getRootProjectDetails";
 import { createProjectInputSchema } from "@/zod/project.schema";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
@@ -13,21 +14,27 @@ export const POST = asyncHandler(async (req: Request) => {
 	const parsed = createProjectInputSchema.safeParse(body);
 
 	if (!parsed.success) {
-		console.log(parsed.error);
 		const errorMessage = parsed.error.errors[0].message;
 		throw new ApiError(errorMessage, 400);
 	}
 
 	const { parentId, ...projectData } = parsed.data;
 
-	if (parentId) {
-		await assertProjectOwnershipOrThrow(parentId, currentUser.id);
+	let parentProjectId = parentId;
+
+	if (!parentProjectId) {
+		const { id: rootProjectId } = await getRootProjectDetail({
+			userId: currentUser.id,
+		});
+		parentProjectId = rootProjectId;
+
+		await assertProjectOwnershipOrThrow(parentProjectId, currentUser.id);
 	}
 
 	const newProject = await prisma.project.create({
 		data: {
 			...projectData,
-			parentId,
+			parentId: parentProjectId,
 			ownerId: currentUser.id,
 		},
 	});
@@ -41,7 +48,7 @@ export const GET = asyncHandler(async (req: Request) => {
 	const currentUser = await getAuthUser();
 
 	const projects = await prisma.project.findMany({
-		where: { ownerId: currentUser.id, parentId: null },
+		where: { ownerId: currentUser.id, isRoot: false },
 		select: {
 			id: true,
 			title: true,
@@ -56,7 +63,7 @@ export const GET = asyncHandler(async (req: Request) => {
 		},
 	});
 
-	if (projects.length <= 0) {
+	if (projects.length === 0) {
 		return apiResponse("You have no project", 200, { projects });
 	}
 

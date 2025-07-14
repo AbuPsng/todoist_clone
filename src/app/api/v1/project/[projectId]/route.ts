@@ -57,8 +57,6 @@ export const PATCH = asyncHandler(
 	) => {
 		const { id: projectId } = await getAndValidateProjectId(params);
 
-		const currentUser = await getAuthUser();
-
 		const body = await req.json();
 
 		const parsed = updateProjectInputSchema.safeParse(body);
@@ -69,7 +67,7 @@ export const PATCH = asyncHandler(
 		}
 
 		const updatedProject = await prisma.project.update({
-			where: { id: projectId, ownerId: currentUser.id },
+			where: { id: projectId },
 			data: parsed.data,
 		});
 
@@ -78,7 +76,7 @@ export const PATCH = asyncHandler(
 		}
 
 		return apiResponse("Project update successfully", 200, {
-			Project: updatedProject,
+			project: updatedProject,
 		});
 	}
 );

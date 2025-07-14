@@ -13,7 +13,7 @@ export const getAndValidateProjectId = async (
 	}
 
 	const project = await prisma.project.findUnique({
-		where: { id: projectId },
+		where: { id: projectId, isRoot: false },
 		select: {
 			id: true,
 			ownerId: true,
