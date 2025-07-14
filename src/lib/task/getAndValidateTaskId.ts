@@ -17,7 +17,11 @@ export const getAndValidateTaskId = async (
 	if (!task) {
 		throw new ApiError("Task not found", 404);
 	}
-	console.log(currentUser, "current user");
+
+	if (!task) {
+		throw new ApiError("Task not found", 404);
+	}
+
 	if (task.userId !== currentUser.id) {
 		throw new ApiError("You do not have permission to access this task", 403);
 	}

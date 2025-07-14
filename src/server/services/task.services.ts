@@ -2,48 +2,51 @@ import {
 	CreateTaskInputType,
 	GetTaskQueryType,
 } from "@/types/services/task.services.types";
+import { taskInputSchema } from "@/zod/task.schema";
 import { Prisma } from "@/generated/prisma";
+import { ROOT_PROJECT } from "@/const";
 import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 
-export const createTask = async ({
-	userId,
-	title,
-	description,
-	dueDate,
-	projectId,
-}: CreateTaskInputType) => {
-	const taskData = {
-		userId,
-		title,
-		...(description && { description }),
-		...(dueDate && { dueDate }),
-		...(projectId && { projectId }),
-	};
+export const createTask = async (taskData: CreateTaskInputType) => {
+	const { title, description, dueDate, projectId, userId } = taskData;
 
-	if (projectId) {
-		const existingTask = await prisma.task.findFirst({
-			where: {
-				title,
-				projectId,
-			},
+	// 🔄 Fallback to root project if projectId not provided
+	let projectIdToUse = projectId;
+
+	if (!projectIdToUse) {
+		const rootProject = await prisma.project.findFirst({
+			where: { isRoot: true, title: ROOT_PROJECT.name, ownerId: userId },
+			select: { id: true },
 		});
 
-		if (existingTask) {
-			throw new ApiError(
-				"Task with the same title already exists in this project",
-				400
-			);
+		if (!rootProject) {
+			throw new ApiError("Root project not found", 500);
 		}
+
+		projectIdToUse = rootProject.id;
 	}
 
-	const newTask = await prisma.task.create({
-		data: { ...taskData },
+	// 🧠 Duplicate title check in same project except root
+	const existingTask = await prisma.task.findFirst({
+		where: { title, projectId: projectIdToUse },
 	});
 
-	if (!newTask) {
-		throw new ApiError("Failed to create task", 500);
+	if (existingTask) {
+		throw new ApiError("Task with the same title already exists", 400);
 	}
+
+	// ✅ Create task
+	const newTask = await prisma.task.create({
+		data: {
+			userId,
+			title,
+			projectId: projectIdToUse,
+			...(description && { description }),
+			...(dueDate && { dueDate }),
+		},
+	});
+
 	return newTask;
 };
 
