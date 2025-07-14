@@ -14,3 +14,12 @@ export const updateProjectInputSchema = z
 		description: z.string().optional(),
 	})
 	.strict();
+
+export const batchMoveProjectInputSchema = z.object({
+	parentProjectId: z.string(),
+	toBeMoveProjectIds: z.array(z.string()),
+});
+
+export const batchDeleteProjectInputSchema = z.object({
+	toBeDeleteProjectIds: z.array(z.string()),
+});

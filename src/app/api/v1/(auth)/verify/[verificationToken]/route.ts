@@ -20,7 +20,17 @@ export const GET = asyncHandler(
 
 		const verifiedUser = await prisma.user.update({
 			where: { id: user.id },
-			data: { isVerified: true, verificationToken: null },
+			data: {
+				isVerified: true,
+				verificationToken: null,
+				projects: {
+					create: {
+						title: "MY Projects",
+						isRoot: true,
+						parentId: null,
+					},
+				},
+			},
 		});
 
 		if (!verifiedUser) {

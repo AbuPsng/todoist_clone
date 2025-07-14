@@ -41,13 +41,14 @@ model Project {
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  isRoot Boolean @default(false)
 
   // Foreign keys
   ownerId String
 
   // Self-relation for nested projects
   parentId    String?
-  parent      Project?  @relation("SubProjects", fields: [parentId], references: [id])
+  parent      Project?  @relation("SubProjects", fields: [parentId], references: [id],onDelete: Cascade)
   subProjects Project[] @relation("SubProjects")
 
   // Relations
@@ -67,11 +68,11 @@ model Task {
 
   //  Foreign keys
   userId    String
-  projectId String?
+  projectId String
 
   // Relations
   creator      User         @relation(fields: [userId], references: [id])
-  project   Project?        @relation(fields: [projectId], references: [id])
+  project   Project        @relation(fields: [projectId], references: [id],onDelete: Cascade)
   assignees TaskAssignee[]
 
   @@index([userId]) // Index for faster lookups by user
@@ -84,7 +85,7 @@ model ProjectMembership {
   projectId String
 
   user    User    @relation(fields: [userId], references: [id])
-  project Project @relation(fields: [projectId], references: [id])
+  project Project @relation(fields: [projectId], references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -99,7 +100,7 @@ model TaskAssignee {
   assignedAt  DateTime @default(now())
 
   user        User     @relation("AssigneeUser", fields: [assigneeId], references: [id])
-  task        Task     @relation(fields: [taskId], references: [id])
+  task        Task     @relation(fields: [taskId], references: [id],onDelete: Cascade)
   assigner    User     @relation("AssignerUser", fields: [assignerId], references: [id])
 
   @@unique([assigneeId, taskId])

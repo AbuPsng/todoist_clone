@@ -42,7 +42,11 @@ export const GET = asyncHandler(async (req: Request) => {
 
 	const projects = await prisma.project.findMany({
 		where: { ownerId: currentUser.id, parentId: null },
-		include: {
+		select: {
+			id: true,
+			title: true,
+			description: true,
+			createdAt: true,
 			subProjects: {
 				select: {
 					id: true,

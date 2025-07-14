@@ -1,7 +1,6 @@
 import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 
-
 export const assertProjectOwnershipOrThrow = async (
 	projectProjectId: string,
 	userId: string
@@ -18,8 +17,3 @@ export const assertProjectOwnershipOrThrow = async (
 	}
 	return true;
 };
-
-
-export const getAllTheTaskFromNestedProject= async(projectId){
-	
-}

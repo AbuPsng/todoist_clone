@@ -22,6 +22,7 @@ export const getAndValidateProjectId = async (
 					id: true,
 				},
 			},
+			tasks: true,
 		},
 	});
 
