@@ -6,15 +6,17 @@ export type CreateProjectInputType = z.infer<typeof createProjectInputSchema>;
 type ProjectTreeTaskType = {
 	id: string;
 	title: string;
-	createdAt: string;
 };
 
-export type ProjectTreeHierarchyType = {
+export type ProjectTreeHierarchyReturnType = {
 	id: string;
 	title: string;
-	description: string | null;
-	createdAt: Date;
-	parentId: string;
+	parentId: string | null;
 	tasks: ProjectTreeTaskType[];
 	subProjects: ProjectTreeHierarchyType[];
 };
+
+export type ProjectTreeHierarchyType = Omit<
+	ProjectTreeHierarchyReturnType,
+	"subProjects"
+>;

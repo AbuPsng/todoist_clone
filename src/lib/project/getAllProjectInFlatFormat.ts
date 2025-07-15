@@ -1,3 +1,5 @@
+import { id } from "zod/v4/locales";
+
 import ApiError from "../ApiError";
 import { prisma } from "../db/db";
 
@@ -14,18 +16,14 @@ export const getAllProjectInFlatFormat = async ({
 			},
 			select: {
 				id: true,
-				createdAt: true,
 				title: true,
-				description: true,
 				parentId: true,
 				tasks: {
 					select: {
 						id: true,
 						title: true,
-						createdAt: true,
 					},
 				},
-				subProjects: true,
 			},
 		});
 		return allProjectExceptRoot;

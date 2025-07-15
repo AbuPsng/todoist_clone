@@ -1,9 +1,12 @@
-import { ProjectTreeHierarchyType } from "@/types/services/project.services.types";
+import {
+	ProjectTreeHierarchyReturnType,
+	ProjectTreeHierarchyType,
+} from "@/types/services/project.services.types";
 
 export function getProjectHierarchy(
 	allProjects: ProjectTreeHierarchyType[],
 	parentProjectId: string
-): ProjectTreeHierarchyType[] {
+): ProjectTreeHierarchyReturnType[] {
 	const hierarchyTree = allProjects
 		.filter((project) => project.parentId === parentProjectId)
 		.map((parentProject) => {
