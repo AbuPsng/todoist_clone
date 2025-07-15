@@ -1,5 +1,6 @@
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
+import { ROOT_PROJECT } from "@/const";
 import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 
@@ -25,7 +26,7 @@ export const GET = asyncHandler(
 				verificationToken: null,
 				projects: {
 					create: {
-						title: "MY Projects",
+						title: ROOT_PROJECT.name,
 						isRoot: true,
 						parentId: null,
 					},

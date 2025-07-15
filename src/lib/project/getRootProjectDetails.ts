@@ -9,7 +9,6 @@ export const getRootProjectDetail = async ({ userId }: { userId: string }) => {
 			where: { isRoot: true, ownerId: userId, title: ROOT_PROJECT.name },
 			select: { id: true, ownerId: true },
 		});
-
 		if (!rootProject) {
 			throw new ApiError("Error while fetching root project data", 400);
 		}

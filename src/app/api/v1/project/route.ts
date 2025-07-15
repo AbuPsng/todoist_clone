@@ -1,5 +1,7 @@
+import { getAllProjectInFlatFormat } from "@/lib/project/getAllProjectInFlatFormat";
 import { assertProjectOwnershipOrThrow } from "@/server/services/project.services";
 import { getRootProjectDetail } from "@/lib/project/getRootProjectDetails";
+import { getProjectHierarchy } from "@/lib/project/getProjectHierarchy";
 import { createProjectInputSchema } from "@/zod/project.schema";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
@@ -37,6 +39,12 @@ export const POST = asyncHandler(async (req: Request) => {
 			parentId: parentProjectId,
 			ownerId: currentUser.id,
 		},
+		select: {
+			id: true,
+			title: true,
+			description: true,
+			createdAt: true,
+		},
 	});
 
 	return apiResponse("Project created successfully", 201, {
@@ -47,25 +55,26 @@ export const POST = asyncHandler(async (req: Request) => {
 export const GET = asyncHandler(async (req: Request) => {
 	const currentUser = await getAuthUser();
 
-	const projects = await prisma.project.findMany({
-		where: { ownerId: currentUser.id, isRoot: false },
-		select: {
-			id: true,
-			title: true,
-			description: true,
-			createdAt: true,
-			subProjects: {
-				select: {
-					id: true,
-					title: true,
-				},
-			},
-		},
+	const { id: rootProjectId } = await getRootProjectDetail({
+		userId: currentUser.id,
 	});
 
-	if (projects.length === 0) {
-		return apiResponse("You have no project", 200, { projects });
+	const allProjectExceptRootProject = await getAllProjectInFlatFormat({
+		userId: currentUser.id,
+	});
+
+	const rootProjectWithTaskAndNestedSubProject = getProjectHierarchy(
+		allProjectExceptRootProject,
+		rootProjectId
+	);
+
+	if (rootProjectWithTaskAndNestedSubProject.length === 0) {
+		return apiResponse("You have no project", 200, {
+			projects: rootProjectWithTaskAndNestedSubProject,
+		});
 	}
 
-	return apiResponse("Fetched all projects successfully", 200, { projects });
+	return apiResponse("Fetched all projects successfully", 200, {
+		projects: rootProjectWithTaskAndNestedSubProject,
+	});
 });

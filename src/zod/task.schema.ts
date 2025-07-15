@@ -2,8 +2,8 @@ import z from "zod";
 
 export const taskInputSchema = z
 	.object({
-		title: z.string().min(3, "Title must be at least 3 characters long"),
-		description: z.string().optional(),
+		title: z.string().trim().min(3, "Title must be at least 3 characters long"),
+		description: z.string().trim().optional(),
 		projectId: z.string().optional(),
 		dueDate: z.coerce.date().optional(),
 	})
@@ -11,8 +11,8 @@ export const taskInputSchema = z
 
 export const taskUpdateInputSchema = z
 	.object({
-		title: z.string().optional(),
-		description: z.string().optional(),
+		title: z.string().trim().optional(),
+		description: z.string().trim().optional(),
 		completed: z.boolean().optional(),
 		dueDate: z.coerce.date().optional(),
 	})

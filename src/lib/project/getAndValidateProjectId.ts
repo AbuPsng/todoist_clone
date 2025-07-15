@@ -3,17 +3,22 @@ import ApiError from "../ApiError";
 import { prisma } from "../db/db";
 
 export const getAndValidateProjectId = async (
-	params: Promise<{ projectId: string }>
+	params: Promise<{ projectId: string }> | string
 ) => {
-	const { projectId } = await params;
+	let projectIdToCheck = params;
+
+	if (typeof params !== "string") {
+		const { projectId } = await params;
+		projectIdToCheck = projectId;
+	}
 	const currentUser = await getAuthUser();
 
-	if (!projectId || typeof projectId !== "string") {
+	if (!projectIdToCheck || typeof projectIdToCheck !== "string") {
 		throw new ApiError("Please provide a valid project ID", 400);
 	}
 
 	const project = await prisma.project.findUnique({
-		where: { id: projectId, isRoot: false },
+		where: { id: projectIdToCheck, isRoot: false },
 		select: {
 			id: true,
 			ownerId: true,
