@@ -1,9 +1,10 @@
 import { createUser, findUserByEmail } from "@/server/services/user.services";
-import { generateHashPassword, generateToken } from "@/lib/auth/auth.lib";
 import { userRegisterInputSchema } from "@/zod/user.schema";
+import { generateHashPassword } from "@/lib/auth/auth.lib";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
 import { sendMail } from "@/lib/mail/sendMail";
+import { generateToken } from "@/lib/utils";
 import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 

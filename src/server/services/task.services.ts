@@ -1,8 +1,7 @@
 import {
 	CreateTaskInputType,
 	GetTaskQueryType,
-} from "@/types/services/task.services.types";
-import { taskInputSchema } from "@/zod/task.schema";
+} from "@/types/services/task.types";
 import { Prisma } from "@/generated/prisma";
 import { ROOT_PROJECT } from "@/const";
 import ApiError from "@/lib/ApiError";

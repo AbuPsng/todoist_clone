@@ -1,7 +1,7 @@
 import {
 	ProjectTreeHierarchyReturnType,
 	ProjectTreeHierarchyType,
-} from "@/types/services/project.services.types";
+} from "@/types/services/project.types";
 
 export function getProjectHierarchy(
 	allProjects: ProjectTreeHierarchyType[],

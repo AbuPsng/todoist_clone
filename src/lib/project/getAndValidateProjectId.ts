@@ -3,22 +3,20 @@ import ApiError from "../ApiError";
 import { prisma } from "../db/db";
 
 export const getAndValidateProjectId = async (
-	params: Promise<{ projectId: string }> | string
+	params: Promise<{ projectId: string }> | string,
+	userId?: string
 ) => {
-	let projectIdToCheck = params;
+	let currentUserId = userId ? userId : (await getAuthUser()).id;
 
-	if (typeof params !== "string") {
-		const { projectId } = await params;
-		projectIdToCheck = projectId;
-	}
-	const currentUser = await getAuthUser();
+	const projectId =
+		typeof params === "string" ? params : (await params).projectId;
 
-	if (!projectIdToCheck || typeof projectIdToCheck !== "string") {
+	if (!projectId || typeof projectId !== "string") {
 		throw new ApiError("Please provide a valid project ID", 400);
 	}
 
 	const project = await prisma.project.findUnique({
-		where: { id: projectIdToCheck },
+		where: { id: projectId },
 		select: {
 			id: true,
 			ownerId: true,
@@ -28,6 +26,11 @@ export const getAndValidateProjectId = async (
 				},
 			},
 			tasks: true,
+			memberships: {
+				select: {
+					id: true,
+				},
+			},
 		},
 	});
 
@@ -35,7 +38,7 @@ export const getAndValidateProjectId = async (
 		throw new ApiError("project not found", 404);
 	}
 
-	if (project.ownerId !== currentUser.id) {
+	if (project.ownerId !== currentUserId) {
 		throw new ApiError("You do not have permission to access this project", 403);
 	}
 

@@ -8,6 +8,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PROJECT_ROLE {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum PROJECT_MEMBERSHIP_ROLE {
+  ADMIN
+  MEMBER
+}
+
+enum INVITE_STATUS {
+  PENDING
+  ACCEPTED
+  EXPIRED
+}
+
 model User {
   id       String  @id @default(uuid())
   name     String
@@ -26,44 +43,47 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  tasks         Task[]
-  projects      Project[]
-  memberships   ProjectMembership[]
-
+  tasks       Task[]
+  projects    Project[]
+  memberships ProjectMembership[] @relation("Member")
 
   taskAssignedToMe TaskAssignee[] @relation("AssigneeUser") // tasks I received
-  taskAssignedByMe  TaskAssignee[] @relation("AssignerUser")
+  taskAssignedByMe TaskAssignee[] @relation("AssignerUser")
+
+  inviterOf ProjectMembership[] @relation("Inviter")
+  tokenSend Invitation[]        @relation("Inviter")
 }
 
 model Project {
   id          String   @id @default(uuid())
-  title        String
+  title       String
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  isRoot Boolean @default(false)
+  isRoot      Boolean  @default(false)
 
   // Foreign keys
   ownerId String
 
   // Self-relation for nested projects
   parentId    String?
-  parent      Project?  @relation("SubProjects", fields: [parentId], references: [id],onDelete: Cascade)
+  parent      Project?  @relation("SubProjects", fields: [parentId], references: [id], onDelete: Cascade)
   subProjects Project[] @relation("SubProjects")
 
   // Relations
-  owner       User                @relation(fields: [ownerId], references: [id])
-  tasks       Task[]
-  memberships ProjectMembership[]
+  owner        User                @relation(fields: [ownerId], references: [id])
+  tasks        Task[]
+  memberships  ProjectMembership[]
+  inviteTokens Invitation[]
 }
 
 model Task {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String?
-  completed   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  completed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   dueDate     DateTime?
 
   //  Foreign keys
@@ -71,8 +91,8 @@ model Task {
   projectId String
 
   // Relations
-  creator      User         @relation(fields: [userId], references: [id])
-  project   Project        @relation(fields: [projectId], references: [id],onDelete: Cascade)
+  creator   User           @relation(fields: [userId], references: [id])
+  project   Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
   assignees TaskAssignee[]
 
   @@index([userId]) // Index for faster lookups by user
@@ -80,29 +100,47 @@ model Task {
 }
 
 model ProjectMembership {
-  id        String @id @default(uuid())
-  userId    String
-  projectId String
+  id         String       @id @default(uuid())
+  teammateId String
+  projectId  String
+  role       PROJECT_ROLE @default(MEMBER)
 
-  user    User    @relation(fields: [userId], references: [id])
-  project Project @relation(fields: [projectId], references: [id],onDelete: Cascade)
+  inviterId String?
+
+  teammate User    @relation("Member", fields: [teammateId], references: [id])
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  inviter  User?   @relation("Inviter", fields: [inviterId], references: [id])
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, projectId])
+  @@unique([teammateId, projectId])
 }
 
 model TaskAssignee {
-  id          String   @id @default(uuid())
-  assigneeId      String   // Who is being assigned
-  taskId      String   // The task assigned
-  assignerId  String   // Who assigned the task (userId of assigner)
-  assignedAt  DateTime @default(now())
+  id         String   @id @default(uuid())
+  assigneeId String // Who is being assigned
+  taskId     String // The task assigned
+  assignerId String // Who assigned the task (userId of assigner)
+  assignedAt DateTime @default(now())
 
-  user        User     @relation("AssigneeUser", fields: [assigneeId], references: [id])
-  task        Task     @relation(fields: [taskId], references: [id],onDelete: Cascade)
-  assigner    User     @relation("AssignerUser", fields: [assignerId], references: [id])
+  user     User @relation("AssigneeUser", fields: [assigneeId], references: [id])
+  task     Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  assigner User @relation("AssignerUser", fields: [assignerId], references: [id])
 
   @@unique([assigneeId, taskId])
 }
 
+model Invitation {
+  id        String                  @id @default(uuid())
+  token     String                  @unique // Used in the URL
+  projectId String
+  email     String? // Optional if you're inviting via email
+  inviterId String
+  role      PROJECT_MEMBERSHIP_ROLE @default(MEMBER)
+
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+
+  project Project @relation(fields: [projectId], references: [id])
+  inviter User    @relation("Inviter", fields: [inviterId], references: [id])
+}

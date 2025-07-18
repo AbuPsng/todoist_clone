@@ -1,5 +1,5 @@
 import { createTask, getAllTaskByQuery } from "@/server/services/task.services";
-import { GetTaskQueryType } from "@/types/services/task.services.types";
+import { GetTaskQueryType } from "@/types/services/task.types";
 import { createQueryOptions } from "@/lib/task/getQuery.lib";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { taskInputSchema } from "@/zod/task.schema";

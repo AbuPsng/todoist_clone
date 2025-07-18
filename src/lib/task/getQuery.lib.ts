@@ -1,4 +1,4 @@
-import { GetTaskQueryType } from "@/types/services/task.services.types";
+import { GetTaskQueryType } from "@/types/services/task.types";
 
 const queryList = [
 	"projectId",

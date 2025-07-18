@@ -1,4 +1,3 @@
-import { randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 
 export const generateHashPassword = async (
@@ -13,8 +12,4 @@ export const comparePassword = async (
 ): Promise<boolean> => {
 	const bcrypt = await import("bcryptjs");
 	return bcrypt.compare(password, hashedPassword);
-};
-
-export const generateToken = (length: number = 6): string => {
-	return randomBytes(length).toString("hex");
 };

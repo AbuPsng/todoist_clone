@@ -1,4 +1,4 @@
-import { UserRegistrationInputType } from "@/types/services/user.services.types";
+import { UserRegistrationInputType } from "@/types/services/user.types";
 import { prisma } from "@/lib/db/db";
 
 export const createUser = async (userData: UserRegistrationInputType) => {

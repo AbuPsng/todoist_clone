@@ -1,6 +1,6 @@
-import { UpdateTaskInputType } from "@/types/services/task.services.types";
 import { taskInputSchema, taskUpdateInputSchema } from "@/zod/task.schema";
 import { getAndValidateTaskId } from "@/lib/task/getAndValidateTaskId";
+import { UpdateTaskInputType } from "@/types/services/task.types";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
 import ApiError from "@/lib/ApiError";
