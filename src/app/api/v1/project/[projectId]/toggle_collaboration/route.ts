@@ -20,14 +20,9 @@ export const POST = asyncHandler(
 			toggleStatusChangeInputSchema,
 			body
 		);
+		console.log("hero");
 
 		const { id: projectId } = await getAndValidateProjectId(params);
-
-		await checkUserRoleAndGiveAccessAsRequire({
-			roleRequire: "OWNER",
-			projectId,
-			userId: currentUser.id,
-		});
 
 		await createMembership({
 			teammateId: currentUser.id,

@@ -42,6 +42,7 @@ export const getAndValidateProjectId = async (
 
 	if (!project.isCollaborated) {
 		if (project.ownerId !== currentUserId) {
+			console.log("her");
 			throw new ApiError("You do not have permission to access this project", 403);
 		}
 	} else {
