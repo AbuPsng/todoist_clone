@@ -41,10 +41,13 @@ export const POST = asyncHandler(async (req: Request) => {
 		data: { verificationToken },
 	});
 
+	const link = `${process.env.API_BASE_URL}/register/${verificationToken}`;
+
 	await sendMail({
 		to: email,
 		subject: "Verify your email",
-		verificationToken,
+		link,
+		variant: "VERIFICATION",
 		username: newUser.name,
 	});
 

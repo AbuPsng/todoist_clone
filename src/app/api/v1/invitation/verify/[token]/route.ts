@@ -1,4 +1,5 @@
-import { getAndValidateInvitationToken } from "@/lib/invite_token/genAndValidateInviteToken";
+import { getAndValidateInvitationToken } from "@/lib/invitation/genAndValidateInviteToken";
+import { createMembership } from "@/lib/project_membership/createMembership";
 import { getAndValidateTaskId } from "@/lib/task/getAndValidateTaskId";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
@@ -16,28 +17,16 @@ export const GET = asyncHandler(
 
 		const { role, projectId, inviterId, token } = invitation;
 
-		const projectMembership = await prisma.projectMembership.create({
-			data: {
-				teammateId: currentUser.id,
-				role,
-				projectId,
-				inviterId,
-			},
-			select: {
-				project: {
-					select: {
-						title: true,
-					},
-				},
-			},
+		await createMembership({
+			role,
+			projectId,
+			inviterId,
+			teammateId: currentUser.id,
 		});
 
 		await prisma.invitation.delete({
 			where: { token },
 		});
-		return apiResponse(
-			`You are now a member of project ${projectMembership.project.title}`,
-			200
-		);
+		return apiResponse(`You have the team successfully`, 200);
 	}
 );

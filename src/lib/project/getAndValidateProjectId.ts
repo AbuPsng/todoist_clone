@@ -1,3 +1,4 @@
+import { checkUserRoleAndGiveAccessAsRequire } from "../project_membership/checkUserRoleAndGiveAccess";
 import { getAuthUser } from "../auth/getAuthUser";
 import ApiError from "../ApiError";
 import { prisma } from "../db/db";
@@ -20,6 +21,7 @@ export const getAndValidateProjectId = async (
 		select: {
 			id: true,
 			ownerId: true,
+			isCollaborated: true,
 			subProjects: {
 				select: {
 					id: true,
@@ -38,8 +40,16 @@ export const getAndValidateProjectId = async (
 		throw new ApiError("project not found", 404);
 	}
 
-	if (project.ownerId !== currentUserId) {
-		throw new ApiError("You do not have permission to access this project", 403);
+	if (!project.isCollaborated) {
+		if (project.ownerId !== currentUserId) {
+			throw new ApiError("You do not have permission to access this project", 403);
+		}
+	} else {
+		await checkUserRoleAndGiveAccessAsRequire({
+			roleRequire: "MEMBER",
+			projectId,
+			userId: currentUserId,
+		});
 	}
 
 	return project;

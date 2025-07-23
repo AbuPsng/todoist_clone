@@ -55,12 +55,13 @@ model User {
 }
 
 model Project {
-  id          String   @id @default(uuid())
-  title       String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  isRoot      Boolean  @default(false)
+  id             String   @id @default(uuid())
+  title          String
+  description    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  isRoot         Boolean  @default(false)
+  isCollaborated Boolean  @default(false)
 
   // Foreign keys
   ownerId String
@@ -134,7 +135,7 @@ model Invitation {
   id        String                  @id @default(uuid())
   token     String                  @unique // Used in the URL
   projectId String
-  email     String? // Optional if you're inviting via email
+  email     String // Optional if you're inviting via email
   inviterId String
   role      PROJECT_MEMBERSHIP_ROLE @default(MEMBER)
 

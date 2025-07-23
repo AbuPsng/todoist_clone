@@ -1,10 +1,11 @@
 import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
-import { createInviteTokenInputSchema } from "@/zod/invite_token.schema";
 import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
+import { createInviteTokenInputSchema } from "@/zod/invitation.schema";
 import { addHours, generateToken } from "@/lib/utils";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
+import { sendMail } from "@/lib/mail/sendMail";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
@@ -13,7 +14,7 @@ export const POST = asyncHandler(async (req: Request) => {
 
 	const parsedData = zodValidateAndParesData(createInviteTokenInputSchema, body);
 
-	const { email, projectId, expiresDuration } = parsedData;
+	const { email, projectId, expiresDuration } = parsedData.data;
 
 	await getAndValidateProjectId(projectId);
 
@@ -23,7 +24,7 @@ export const POST = asyncHandler(async (req: Request) => {
 		? addHours(new Date(), expiresDuration)
 		: null;
 
-	await prisma.invitation.create({
+	const invitation = await prisma.invitation.create({
 		data: {
 			token,
 			inviterId: currentUser.id,
@@ -34,6 +35,14 @@ export const POST = asyncHandler(async (req: Request) => {
 	});
 
 	const urlLink = `${process.env.API_BASE_URL}/invite_token/verify/${token}`;
+
+	await sendMail({
+		to: invitation.email,
+		subject: "Invitation to join project",
+		variant: "INVITATION",
+		username: "",
+		link: urlLink,
+	});
 
 	return apiResponse("Invitation link created successfully", 201, {
 		link: urlLink,

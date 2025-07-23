@@ -22,6 +22,11 @@ export const getAndValidateInvitationToken = async (
 	const isExpired = invitation?.expiresAt && invitation.expiresAt < new Date();
 
 	if (isExpired) {
+		await prisma.invitation.delete({
+			where: {
+				token,
+			},
+		});
 		throw new ApiError("Token has expired", 403);
 	}
 

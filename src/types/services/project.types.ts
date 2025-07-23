@@ -12,8 +12,9 @@ export type ProjectTreeHierarchyReturnType = {
 	id: string;
 	title: string;
 	parentId: string | null;
+	isCollaborated: boolean;
 	tasks: ProjectTreeTaskType[];
-	subProjects: ProjectTreeHierarchyType[];
+	subProjects?: ProjectTreeHierarchyType[];
 };
 
 export type ProjectTreeHierarchyType = Omit<

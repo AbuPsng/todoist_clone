@@ -19,7 +19,7 @@ export const INVITATION_STATUS = {
 };
 
 export const ROLE_TO_INDEX = {
-	OWNER: 0,
+	OWNER: 2,
 	ADMIN: 1,
-	MEMBER: 2,
+	MEMBER: 0,
 } as const;

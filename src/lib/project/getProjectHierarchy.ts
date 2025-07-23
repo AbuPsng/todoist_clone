@@ -7,7 +7,7 @@ export function getProjectHierarchy(
 	allProjects: ProjectTreeHierarchyType[],
 	parentProjectId: string
 ): ProjectTreeHierarchyReturnType[] {
-	const hierarchyTree = allProjects
+	const hierarchyTreeOfOwnedProjects = allProjects
 		.filter((project) => project.parentId === parentProjectId)
 		.map((parentProject) => {
 			return {
@@ -16,5 +16,14 @@ export function getProjectHierarchy(
 			};
 		});
 
-	return hierarchyTree;
+	const allCollaboratedProjects = allProjects.filter(
+		(project) => project.isCollaborated
+	);
+
+	const allProjectsHierarchyTree = [
+		...hierarchyTreeOfOwnedProjects,
+		...allCollaboratedProjects,
+	];
+
+	return allProjectsHierarchyTree;
 }

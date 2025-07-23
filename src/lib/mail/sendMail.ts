@@ -5,15 +5,17 @@ import ApiError from "../ApiError";
 
 type EmailTemplateProps = {
 	to: string;
-	username: string;
+	username?: string;
 	subject: string;
-	verificationToken: string;
+	link: string;
+	variant: "INVITATION" | "VERIFICATION";
 };
 
 export const sendMail = async ({
 	to,
 	subject,
-	verificationToken,
+	link,
+	variant,
 	username,
 }: EmailTemplateProps) => {
 	try {
@@ -23,10 +25,11 @@ export const sendMail = async ({
 			from: "Acme <onboarding@resend.dev>",
 			to,
 			subject,
-			html: EmailTemplate({ username, verificationToken }),
+			html: EmailTemplate({ username, link, variant }),
 		});
 
 		if (error) {
+			console.log(error);
 			throw new ApiError(error.message || "Failed to send email", 500);
 		}
 		console.log(data);

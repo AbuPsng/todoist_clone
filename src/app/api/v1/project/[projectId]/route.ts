@@ -1,6 +1,6 @@
 import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
+import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
 import { updateProjectInputSchema } from "@/zod/project.schema";
-import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
 import ApiError from "@/lib/ApiError";
@@ -59,16 +59,11 @@ export const PATCH = asyncHandler(
 
 		const body = await req.json();
 
-		const parsed = updateProjectInputSchema.safeParse(body);
-
-		if (!parsed.success) {
-			const errorMessage = parsed.error.errors[0].message;
-			throw new ApiError(errorMessage, 400);
-		}
+		const data = zodValidateAndParesData(updateProjectInputSchema, body);
 
 		const updatedProject = await prisma.project.update({
 			where: { id: projectId },
-			data: parsed.data,
+			data: data,
 		});
 
 		if (!updatedProject) {

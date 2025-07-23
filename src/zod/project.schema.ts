@@ -26,3 +26,7 @@ export const batchMoveProjectInputSchema = z.object({
 export const batchDeleteProjectInputSchema = z.object({
 	toBeDeleteProjectIds: z.array(z.string().trim()),
 });
+
+export const toggleStatusChangeInputSchema = z.object({
+	toggleStatus: z.boolean(),
+});
