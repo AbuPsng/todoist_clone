@@ -7,16 +7,19 @@ export const assignUserToTask = async ({
 	assigneeId,
 	assignerId,
 	taskId,
+	projectId,
 }: {
 	assigneeId: string;
 	assignerId: string;
 	taskId: string;
+	projectId: string;
 }): Promise<TaskAssignee> => {
 	const taskData = await prisma.taskAssignee.create({
 		data: {
 			assigneeId,
 			assignerId,
 			taskId,
+			projectId,
 		},
 	});
 

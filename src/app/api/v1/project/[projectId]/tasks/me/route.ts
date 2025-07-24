@@ -21,7 +21,7 @@ export const GET = asyncHandler(
 		});
 
 		const taskAssignees = await prisma.taskAssignee.findMany({
-			where: {},
+			where: { projectId, assigneeId: currentUser.id },
 		});
 		return apiResponse("All task assigned to me  fetched successfully", 200, {
 			taskAssignees,
