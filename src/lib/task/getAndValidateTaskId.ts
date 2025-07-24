@@ -26,5 +26,5 @@ export const getAndValidateTaskId = async (
 		throw new ApiError("You do not have permission to access this task", 403);
 	}
 
-	return taskId;
+	return task;
 };
