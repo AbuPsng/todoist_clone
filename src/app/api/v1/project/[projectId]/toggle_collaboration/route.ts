@@ -20,7 +20,6 @@ export const POST = asyncHandler(
 			toggleStatusChangeInputSchema,
 			body
 		);
-		console.log("hero");
 
 		const { id: projectId } = await getAndValidateProjectId(params);
 

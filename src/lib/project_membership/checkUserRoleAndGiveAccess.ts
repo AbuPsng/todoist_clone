@@ -29,6 +29,10 @@ export const checkUserRoleAndGiveAccessAsRequire = async ({
 		throw new ApiError("You don't have access to this project", 403);
 	}
 
+	if (membership.teammateId === currentUserId) {
+		throw new ApiError("This action cannot perform on owner of the project", 400);
+	}
+
 	const teammateRoleInIndex = convertRoleToNumber(membership.role);
 	const minimumRequiredRoleInIndex = convertRoleToNumber(roleRequire);
 

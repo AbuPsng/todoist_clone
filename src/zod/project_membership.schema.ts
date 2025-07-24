@@ -7,3 +7,7 @@ export const createProjectMembershipInputSchema = z.object({
 	inviterId: z.string().optional(),
 	role: z.enum(PROJECT_MEMBERSHIPS_ROLES_VALUES).default("MEMBER"),
 });
+
+export const updateMembershipRoleInputSchema = z.object({
+	roleToAssign: z.enum(PROJECT_MEMBERSHIPS_ROLES_VALUES).default("MEMBER"),
+});
