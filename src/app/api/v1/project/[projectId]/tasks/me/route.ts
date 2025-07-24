@@ -1,6 +1,5 @@
 import { ensureUserIsProjectMember } from "@/lib/task_assignee/ensureUserIsProjectMember";
 import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
-import { getAndValidateTaskId } from "@/lib/task/getAndValidateTaskId";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
