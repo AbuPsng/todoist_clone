@@ -7,6 +7,7 @@ import { createTaskAssigneeInputSchema } from "@/zod/task_assignee";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { asyncHandler } from "@/lib/asyncHandler";
 import { apiResponse } from "@/lib/ApiResponse";
+import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(
 	async (req: Request, { params }: { params: Promise<{ taskId: string }> }) => {
@@ -38,5 +39,26 @@ export const POST = asyncHandler(
 			taskId,
 		});
 		return apiResponse("User assigned to task successfully", 200);
+	}
+);
+
+//This api will get all the teammate which have been assign this task
+export const GET = asyncHandler(
+	async (req: Request, { params }: { params: Promise<{ taskId: string }> }) => {
+		const currentUser = await getAuthUser();
+
+		const { id: taskId, projectId } = await getAndValidateTaskId(params);
+
+		await ensureUserIsProjectMember({
+			userId: currentUser.id,
+			projectId,
+		});
+
+		const taskAssignees = await prisma.taskAssignee.findMany({
+			where: { taskId },
+		});
+		return apiResponse("Users assigned to this task fetched successfully", 200, {
+			taskAssignees,
+		});
 	}
 );

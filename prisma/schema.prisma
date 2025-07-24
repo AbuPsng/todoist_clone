@@ -76,6 +76,7 @@ model Project {
   tasks        Task[]
   memberships  ProjectMembership[]
   inviteTokens Invitation[]
+  taskAssignees TaskAssignee[]
 }
 
 model Task {
@@ -123,10 +124,13 @@ model TaskAssignee {
   taskId     String // The task assigned
   assignerId String // Who assigned the task (userId of assigner)
   assignedAt DateTime @default(now())
+  projectId String
 
   user     User @relation("AssigneeUser", fields: [assigneeId], references: [id])
   task     Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
   assigner User @relation("AssignerUser", fields: [assignerId], references: [id])
+  project Project @relation( fields: [projectId], references: [id])
+
 
   @@unique([assigneeId, taskId])
 }
