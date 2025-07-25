@@ -1,14 +1,18 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import PricingSection from "@/components/landing_page/sections/PricingSection";
+import FeatureSection from "@/components/landing_page/sections/FeatureSection";
+import HeroSection from "@/components/landing_page/sections/HeroSection";
+import Navbar from "@/components/landing_page/Navbar";
+import Footer from "@/components/landing_page/Footer";
 
-export default function Home() {
+export default function LandingPage() {
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-between p-24">
-			<h1 className="text-4xl font-bold">Welcome to Todoist</h1>
-			<p className="mt-4 text-lg">Your task management solution</p>
-			<Button className="mt-6" variant="default">
-				Get Started
-			</Button>
+		<div className="overflow-x bg-gray-50">
+			{" "}
+			<Navbar />
+			<HeroSection />
+			<FeatureSection />
+			<PricingSection />
+			<Footer />
 		</div>
 	);
 }
