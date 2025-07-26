@@ -18,8 +18,14 @@ export const userRegisterInputSchema = z
 			.min(8, "Confirm password must be at least 8 characters long"),
 	})
 	.strict()
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords do not match",
+	.superRefine((data, ctx) => {
+		if (data.password !== data.confirmPassword) {
+			ctx.addIssue({
+				path: ["confirmPassword"], // 👈 attaches error to the field
+				code: "custom",
+				message: "Passwords do not match",
+			});
+		}
 	});
 
 export const userLoginInputSchema = z

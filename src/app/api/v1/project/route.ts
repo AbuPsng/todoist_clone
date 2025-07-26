@@ -1,12 +1,12 @@
-import { getAllProjectInFlatFormat } from "@/lib/project/getAllProjectInFlatFormat";
+import { getAllProjectInFlatFormat } from "@/lib/api/project/getAllProjectInFlatFormat";
 import { assertProjectOwnershipOrThrow } from "@/server/services/project.services";
-import { getRootProjectDetail } from "@/lib/project/getRootProjectDetails";
-import { getProjectHierarchy } from "@/lib/project/getProjectHierarchy";
+import { getRootProjectDetail } from "@/lib/api/project/getRootProjectDetails";
+import { getProjectHierarchy } from "@/lib/api/project/getProjectHierarchy";
 import { createProjectInputSchema } from "@/zod/project.schema";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import ApiError from "@/lib/ApiError";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {

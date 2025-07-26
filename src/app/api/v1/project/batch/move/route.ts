@@ -1,8 +1,8 @@
-import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
+import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
 import { batchMoveProjectInputSchema } from "@/zod/project.schema";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import ApiError from "@/lib/ApiError";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {

@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/api/utils";
 import * as React from "react";
 
 const buttonVariants = cva(
@@ -9,7 +9,7 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				primary:
-					"cursor-pointer px-10 py-6 text-base font-bold leading-7 text-white  transition-all duration-200 bg-gray-900 border border-transparent rounded-xl hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900",
+					"cursor-pointer px-10 py-6 text-base font-bold leading-7 text-white  transition-all duration-200 bg-gray-900 border border-transparent",
 				default:
 					" px-10 py-6 text-base font-bold leading-7 text-white  transition-all duration-200 bg-gray-900 border border-transparent rounded-xl hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900",
 				destructive:

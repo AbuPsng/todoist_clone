@@ -1,11 +1,11 @@
-import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/project_membership/checkUserRoleAndGiveAccess";
-import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
-import { createMembership } from "@/lib/project_membership/createMembership";
-import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
+import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/api/project_membership/checkUserRoleAndGiveAccess";
+import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
+import { createMembership } from "@/lib/api/project_membership/createMembership";
+import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
 import { toggleStatusChangeInputSchema } from "@/zod/project.schema";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(

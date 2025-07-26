@@ -1,12 +1,12 @@
 import { createUser, findUserByEmail } from "@/server/services/user.services";
+import { generateHashPassword } from "@/lib/api/auth/auth.lib";
 import { userRegisterInputSchema } from "@/zod/user.schema";
-import { generateHashPassword } from "@/lib/auth/auth.lib";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import { sendMail } from "@/lib/mail/sendMail";
-import { generateToken } from "@/lib/utils";
-import ApiError from "@/lib/ApiError";
-import { prisma } from "@/lib/db/db";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import { sendMail } from "@/lib/api/mail/sendMail";
+import { generateToken } from "@/lib/api/utils";
+import ApiError from "@/lib/api/ApiError";
+import { prisma } from "@/lib/api/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
 	const body = await req.json();
@@ -41,7 +41,7 @@ export const POST = asyncHandler(async (req: Request) => {
 		data: { verificationToken },
 	});
 
-	const link = `${process.env.API_BASE_URL}/register/${verificationToken}`;
+	const link = `${process.env.BASE_URL}/verify/${verificationToken}`;
 
 	await sendMail({
 		to: email,
@@ -50,6 +50,8 @@ export const POST = asyncHandler(async (req: Request) => {
 		variant: "VERIFICATION",
 		username: newUser.name,
 	});
+
+	console.log(link, "-----link--------");
 
 	return apiResponse("User created successfully", 201);
 });

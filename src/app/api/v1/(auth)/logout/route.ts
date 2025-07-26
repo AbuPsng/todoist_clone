@@ -1,5 +1,5 @@
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { cookies } from "next/headers";
 
 export const GET = asyncHandler(async (req: Request, res: Response) => {

@@ -1,10 +1,10 @@
-import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
-import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
+import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
+import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
 import { createInviteTokenInputSchema } from "@/zod/invitation.schema";
-import { addHours, generateToken } from "@/lib/utils";
+import { addHours, generateToken } from "@/lib/api/utils";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { sendMail } from "@/lib/mail/sendMail";
 import { prisma } from "@/lib/db/db";
 

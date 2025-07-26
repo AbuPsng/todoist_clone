@@ -1,9 +1,9 @@
 import { taskInputSchema, taskUpdateInputSchema } from "@/zod/task.schema";
-import { getAndValidateTaskId } from "@/lib/task/getAndValidateTaskId";
+import { getAndValidateTaskId } from "@/lib/api/task/getAndValidateTaskId";
 import { UpdateTaskInputType } from "@/types/services/task.types";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import ApiError from "@/lib/ApiError";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const GET = asyncHandler(

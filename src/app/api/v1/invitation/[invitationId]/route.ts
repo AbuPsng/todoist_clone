@@ -1,9 +1,9 @@
-import { getAndValidateInvitationId } from "@/lib/invitation/getAndValidateInvitationId";
+import { getAndValidateInvitationId } from "@/lib/api/invitation/getAndValidateInvitationId";
 import { updateInviteTokenInputSchema } from "@/zod/invitation.schema";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import { addHours } from "@/lib/utils";
-import ApiError from "@/lib/ApiError";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import { addHours } from "@/lib/api/utils";
+import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const PATCH = asyncHandler(

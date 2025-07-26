@@ -35,7 +35,7 @@ export const getAllProjectInFlatFormat = async ({
 			},
 		});
 
-		const collaboratedProjectIds = membership.map((m) => m.projectId);
+		const collaboratedProjectIds = membership.map((m: any) => m.projectId);
 
 		const collaboratedProjects = await prisma.project.findMany({
 			where: {

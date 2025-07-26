@@ -1,8 +1,8 @@
-import { ensureUserIsProjectMember } from "@/lib/task_assignee/ensureUserIsProjectMember";
-import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
+import { ensureUserIsProjectMember } from "@/lib/api/task_assignee/ensureUserIsProjectMember";
+import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { prisma } from "@/lib/db/db";
 
 export const GET = asyncHandler(

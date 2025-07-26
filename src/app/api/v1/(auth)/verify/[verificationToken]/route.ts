@@ -1,8 +1,8 @@
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import ApiError from "@/lib/api/ApiError";
+import { prisma } from "@/lib/api/db/db";
 import { ROOT_PROJECT } from "@/const";
-import ApiError from "@/lib/ApiError";
-import { prisma } from "@/lib/db/db";
 
 export const GET = asyncHandler(
 	async (req: Request, context: { params: { verificationToken: string } }) => {

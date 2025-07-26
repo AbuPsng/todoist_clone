@@ -1,4 +1,4 @@
-import ApiError from "@/lib/ApiError";
+import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const assertProjectOwnershipOrThrow = async (

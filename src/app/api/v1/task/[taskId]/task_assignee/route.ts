@@ -1,12 +1,12 @@
-import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/project_membership/checkUserRoleAndGiveAccess";
-import { ensureUserIsProjectMember } from "@/lib/task_assignee/ensureUserIsProjectMember";
-import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
-import { assignUserToTask } from "@/lib/task_assignee/assignUserToTask";
-import { getAndValidateTaskId } from "@/lib/task/getAndValidateTaskId";
+import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/api/project_membership/checkUserRoleAndGiveAccess";
+import { ensureUserIsProjectMember } from "@/lib/api/task_assignee/ensureUserIsProjectMember";
+import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
+import { assignUserToTask } from "@/lib/api/task_assignee/assignUserToTask";
+import { getAndValidateTaskId } from "@/lib/api/task/getAndValidateTaskId";
 import { createTaskAssigneeInputSchema } from "@/zod/task_assignee";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { prisma } from "@/lib/db/db";
 
 export const POST = asyncHandler(

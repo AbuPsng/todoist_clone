@@ -3,8 +3,8 @@ import {
 	GetTaskQueryType,
 } from "@/types/services/task.types";
 import { Prisma } from "@/generated/prisma";
+import ApiError from "@/lib/api/ApiError";
 import { ROOT_PROJECT } from "@/const";
-import ApiError from "@/lib/ApiError";
 import { prisma } from "@/lib/db/db";
 
 export const createTask = async (taskData: CreateTaskInputType) => {

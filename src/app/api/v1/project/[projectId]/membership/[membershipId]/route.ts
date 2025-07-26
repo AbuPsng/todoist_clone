@@ -1,10 +1,10 @@
-import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/project_membership/checkUserRoleAndGiveAccess";
-import { checkAndValidateMembershipById } from "@/lib/project_membership/checkAndValidateMembershipById";
+import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/api/project_membership/checkUserRoleAndGiveAccess";
+import { checkAndValidateMembershipById } from "@/lib/api/project_membership/checkAndValidateMembershipById";
 import { updateMembershipRoleInputSchema } from "@/zod/project_membership.schema";
-import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
+import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { prisma } from "@/lib/db/db";
 
 export const GET = asyncHandler(

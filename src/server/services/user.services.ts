@@ -1,5 +1,5 @@
 import { UserRegistrationInputType } from "@/types/services/user.types";
-import { prisma } from "@/lib/db/db";
+import { prisma } from "@/lib/api/db/db";
 
 export const createUser = async (userData: UserRegistrationInputType) => {
 	// Logic to create a user in the database
@@ -16,6 +16,14 @@ export const findUserByEmail = async (email: string) => {
 
 	const user = await prisma.user.findUnique({
 		where: { email },
+		select: {
+			id: true,
+			email: true,
+			name: true,
+			imageUrl: true,
+			isVerified: true,
+			password: true,
+		},
 	});
 
 	return user;

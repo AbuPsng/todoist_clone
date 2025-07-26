@@ -1,8 +1,8 @@
-import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/project_membership/checkUserRoleAndGiveAccess";
-import { getAndValidateTaskAssigneeId } from "@/lib/task_assignee/getAndValidateTaskAssigneeId";
+import { checkUserRoleAndGiveAccessAsRequire } from "@/lib/api/project_membership/checkUserRoleAndGiveAccess";
+import { getAndValidateTaskAssigneeId } from "@/lib/api/task_assignee/getAndValidateTaskAssigneeId";
+import { asyncHandler } from "@/lib/api/asyncHandler";
 import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
+import { apiResponse } from "@/lib/api/ApiResponse";
 import { prisma } from "@/lib/db/db";
 
 export const DELETE = asyncHandler(

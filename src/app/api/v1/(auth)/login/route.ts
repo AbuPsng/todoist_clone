@@ -1,11 +1,11 @@
 import { findUserByEmail } from "@/server/services/user.services";
+import { comparePassword } from "@/lib/api/auth/auth.lib";
 import { userLoginInputSchema } from "@/zod/user.schema";
-import { comparePassword } from "@/lib/auth/auth.lib";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import { signJWT } from "@/lib/auth/jose.lib";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import { signJWT } from "@/lib/api/auth/jose.lib";
+import ApiError from "@/lib/api/ApiError";
 import { cookies } from "next/headers";
-import ApiError from "@/lib/ApiError";
 
 export const POST = asyncHandler(async (req: Request, res: Response) => {
 	const body = await req.json();
@@ -53,5 +53,14 @@ export const POST = asyncHandler(async (req: Request, res: Response) => {
 		maxAge: 60 * 60 * 24 * 7, // 7 days
 	});
 
-	return apiResponse("User logged in successfully", 200);
+	const user = {
+		id: existingUser.id,
+		email: existingUser.email,
+		imageUrl: existingUser.imageUrl,
+		name: existingUser.name,
+	};
+
+	return apiResponse("User logged in successfully", 200, {
+		user,
+	});
 });

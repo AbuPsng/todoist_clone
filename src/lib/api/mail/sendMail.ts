@@ -1,4 +1,4 @@
-import EmailTemplate from "@/lib/mail/EmailTemplate";
+import EmailTemplate from "@/lib/api/mail/EmailTemplate";
 import { Resend } from "resend";
 
 import ApiError from "../ApiError";
@@ -32,7 +32,6 @@ export const sendMail = async ({
 			console.log(error);
 			throw new ApiError(error.message || "Failed to send email", 500);
 		}
-		console.log(data);
 	} catch (error: any) {
 		console.log(error, "mail");
 		throw new ApiError(error?.message || "Failed to send email", 500);

@@ -1,11 +1,9 @@
-import { getAndValidateInvitationToken } from "@/lib/invitation/genAndValidateInviteToken";
-import { createMembership } from "@/lib/project_membership/createMembership";
-import { getAndValidateTaskId } from "@/lib/task/getAndValidateTaskId";
-import { getAuthUser } from "@/lib/auth/getAuthUser";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import { INVITATION_STATUS } from "@/const";
-import { prisma } from "@/lib/db/db";
+import { getAndValidateInvitationToken } from "@/lib/api/invitation/genAndValidateInviteToken";
+import { createMembership } from "@/lib/api/project_membership/createMembership";
+import { getAuthUser } from "@/lib/api/auth/getAuthUser";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import { prisma } from "@/lib/api/db/db";
 
 export const GET = asyncHandler(
 	async (req: Request, { params }: { params: Promise<{ token: string }> }) => {
@@ -19,6 +17,7 @@ export const GET = asyncHandler(
 
 		await createMembership({
 			role,
+
 			projectId,
 			inviterId,
 			teammateId: currentUser.id,

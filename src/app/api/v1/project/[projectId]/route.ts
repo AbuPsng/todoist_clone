@@ -1,9 +1,9 @@
-import { getAndValidateProjectId } from "@/lib/project/getAndValidateProjectId";
-import { zodValidateAndParesData } from "@/lib/zodValidateAndParesData";
+import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
+import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
 import { updateProjectInputSchema } from "@/zod/project.schema";
-import { asyncHandler } from "@/lib/asyncHandler";
-import { apiResponse } from "@/lib/ApiResponse";
-import ApiError from "@/lib/ApiError";
+import { asyncHandler } from "@/lib/api/asyncHandler";
+import { apiResponse } from "@/lib/api/ApiResponse";
+import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/db/db";
 
 //This query only fetch the its sub-project and direct task (and not the task of sub-project)
