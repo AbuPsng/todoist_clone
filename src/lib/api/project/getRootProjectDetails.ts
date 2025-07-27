@@ -1,4 +1,4 @@
-import { ROOT_PROJECT } from "@/const";
+import { ROOT_PROJECT } from "@/const/api/const";
 
 import ApiError from "../ApiError";
 import { prisma } from "../db/db";

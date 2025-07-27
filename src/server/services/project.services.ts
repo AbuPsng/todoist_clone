@@ -1,5 +1,5 @@
 import ApiError from "@/lib/api/ApiError";
-import { prisma } from "@/lib/db/db";
+import { prisma } from "@/lib/api/db/db";
 
 export const assertProjectOwnershipOrThrow = async (
 	parentProjectId: string,

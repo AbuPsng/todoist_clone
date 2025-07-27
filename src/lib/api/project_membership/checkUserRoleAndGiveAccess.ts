@@ -1,5 +1,5 @@
 import { CheckUserRoleAndGiveAccessAsRequire } from "@/types/services/invitation.types";
-import { ROLE_TO_INDEX } from "@/const";
+import { ROLE_TO_INDEX } from "@/const/api/const";
 
 import { getAuthUser } from "../auth/getAuthUser";
 import ApiError from "../ApiError";

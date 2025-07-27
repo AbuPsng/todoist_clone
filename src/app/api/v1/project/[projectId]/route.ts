@@ -1,52 +1,49 @@
 import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
+import { getRootProjectDetail } from "@/lib/api/project/getRootProjectDetails";
 import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
 import { updateProjectInputSchema } from "@/zod/project.schema";
+import { getAuthUser } from "@/lib/api/auth/getAuthUser";
 import { asyncHandler } from "@/lib/api/asyncHandler";
 import { apiResponse } from "@/lib/api/ApiResponse";
 import ApiError from "@/lib/api/ApiError";
-import { prisma } from "@/lib/db/db";
+import { prisma } from "@/lib/api/db/db";
 
 //This query only fetch the its sub-project and direct task (and not the task of sub-project)
 export const GET = asyncHandler(
 	async (
 		req: Request,
-		{ params }: { params: Promise<{ projectId: string }> }
+		{ params }: { params: Promise<{ projectId?: string }> }
 	) => {
-		const { id: projectId } = await getAndValidateProjectId(params);
+		const currentUser = await getAuthUser();
+		const projectId =
+			(await params).projectId ??
+			(await getRootProjectDetail({ userId: currentUser.id })).id;
 
-		const projects = await prisma.project.findUnique({
-			where: { id: projectId },
+		await getAndValidateProjectId(projectId, currentUser.id);
+
+		const subProjects = await prisma.project.findMany({
+			where: { parentId: projectId },
 			select: {
-				id: true,
-				title: true,
-				description: true,
-				createdAt: true,
 				subProjects: {
 					select: {
 						id: true,
 						title: true,
-						description: true,
-						createdAt: true,
 					},
 				},
 				tasks: {
 					select: {
 						id: true,
 						title: true,
-						description: true,
-						completed: true,
-						createdAt: true,
-						dueDate: true,
 					},
 				},
 			},
 		});
 
-		if (!projects) {
-			throw new ApiError("No project found or access denied", 404);
+		if (!subProjects.length) {
+			throw new ApiError("No projects found or access denied", 404);
 		}
 
-		return apiResponse("Project fetched successfully", 200, { projects });
+		return apiResponse("Project fetched successfully", 200, { subProjects });
 	}
 );
 

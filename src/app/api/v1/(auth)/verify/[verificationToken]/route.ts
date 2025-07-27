@@ -1,8 +1,8 @@
 import { asyncHandler } from "@/lib/api/asyncHandler";
 import { apiResponse } from "@/lib/api/ApiResponse";
+import { ROOT_PROJECT } from "@/const/api/const";
 import ApiError from "@/lib/api/ApiError";
 import { prisma } from "@/lib/api/db/db";
-import { ROOT_PROJECT } from "@/const";
 
 export const GET = asyncHandler(
 	async (req: Request, context: { params: { verificationToken: string } }) => {

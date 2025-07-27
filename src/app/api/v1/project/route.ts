@@ -3,11 +3,11 @@ import { assertProjectOwnershipOrThrow } from "@/server/services/project.service
 import { getRootProjectDetail } from "@/lib/api/project/getRootProjectDetails";
 import { getProjectHierarchy } from "@/lib/api/project/getProjectHierarchy";
 import { createProjectInputSchema } from "@/zod/project.schema";
+import { getAuthUser } from "@/lib/api/auth/getAuthUser";
 import { asyncHandler } from "@/lib/api/asyncHandler";
-import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { apiResponse } from "@/lib/api/ApiResponse";
 import ApiError from "@/lib/api/ApiError";
-import { prisma } from "@/lib/db/db";
+import { prisma } from "@/lib/api/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
 	const body = await req.json();

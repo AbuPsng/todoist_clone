@@ -2,10 +2,10 @@ import {
 	CreateTaskInputType,
 	GetTaskQueryType,
 } from "@/types/services/task.types";
+import { ROOT_PROJECT } from "@/const/api/const";
 import { Prisma } from "@/generated/prisma";
 import ApiError from "@/lib/api/ApiError";
-import { ROOT_PROJECT } from "@/const";
-import { prisma } from "@/lib/db/db";
+import { prisma } from "@/lib/api/db/db";
 
 export const createTask = async (taskData: CreateTaskInputType) => {
 	const { title, description, dueDate, projectId, userId } = taskData;

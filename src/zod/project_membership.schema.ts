@@ -1,4 +1,4 @@
-import { PROJECT_MEMBERSHIPS_ROLES_VALUES } from "@/const";
+import { PROJECT_MEMBERSHIPS_ROLES_VALUES } from "@/const/api/const";
 import z from "zod";
 
 export const createProjectMembershipInputSchema = z.object({

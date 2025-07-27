@@ -1,4 +1,4 @@
-import { ROLE_TO_INDEX } from "@/const";
+import { ROLE_TO_INDEX } from "@/const/api/const";
 
 export type CreateMembershipInputType = {
 	teammateId: string;
