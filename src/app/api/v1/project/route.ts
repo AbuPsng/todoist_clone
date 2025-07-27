@@ -1,3 +1,4 @@
+import { getImmediateSubProjectsAndTasks } from "@/lib/api/project/getImmediateSubProjectsAndTasks";
 import { getAllProjectInFlatFormat } from "@/lib/api/project/getAllProjectInFlatFormat";
 import { assertProjectOwnershipOrThrow } from "@/server/services/project.services";
 import { getRootProjectDetail } from "@/lib/api/project/getRootProjectDetails";
@@ -59,22 +60,25 @@ export const GET = asyncHandler(async (req: Request) => {
 		userId: currentUser.id,
 	});
 
-	const allProjectExceptRootProject = await getAllProjectInFlatFormat({
-		userId: currentUser.id,
-	});
+	// const allProjectExceptRootProject = await getAllProjectInFlatFormat({
+	// 	userId: currentUser.id,
+	// });
 
-	const rootProjectWithTaskAndNestedSubProject = getProjectHierarchy(
-		allProjectExceptRootProject,
-		rootProjectId
-	);
+	// const rootProjectWithTaskAndNestedSubProject = getProjectHierarchy(
+	// 	allProjectExceptRootProject,
+	// 	rootProjectId
+	// );
 
-	if (rootProjectWithTaskAndNestedSubProject.length === 0) {
-		return apiResponse("You have no project", 200, {
-			projects: rootProjectWithTaskAndNestedSubProject,
-		});
-	}
+	// if (rootProjectWithTaskAndNestedSubProject.length === 0) {
+	// 	return apiResponse("You have no project", 200, {
+	// 		projects: rootProjectWithTaskAndNestedSubProject,
+	// 	});
+	// }
+
+	const rootProjectAndImmediateSubProjectsAndTask =
+		await getImmediateSubProjectsAndTasks(rootProjectId);
 
 	return apiResponse("Fetched all projects successfully", 200, {
-		projects: rootProjectWithTaskAndNestedSubProject,
+		projects: rootProjectAndImmediateSubProjectsAndTask,
 	});
 });

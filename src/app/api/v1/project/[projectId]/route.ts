@@ -1,3 +1,4 @@
+import { getImmediateSubProjectsAndTasks } from "@/lib/api/project/getImmediateSubProjectsAndTasks";
 import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
 import { getRootProjectDetail } from "@/lib/api/project/getRootProjectDetails";
 import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
@@ -12,36 +13,11 @@ import { prisma } from "@/lib/api/db/db";
 export const GET = asyncHandler(
 	async (
 		req: Request,
-		{ params }: { params: Promise<{ projectId?: string }> }
+		{ params }: { params: Promise<{ projectId: string }> }
 	) => {
-		const currentUser = await getAuthUser();
-		const projectId =
-			(await params).projectId ??
-			(await getRootProjectDetail({ userId: currentUser.id })).id;
+		const { id: projectId } = await getAndValidateProjectId(params);
 
-		await getAndValidateProjectId(projectId, currentUser.id);
-
-		const subProjects = await prisma.project.findMany({
-			where: { parentId: projectId },
-			select: {
-				subProjects: {
-					select: {
-						id: true,
-						title: true,
-					},
-				},
-				tasks: {
-					select: {
-						id: true,
-						title: true,
-					},
-				},
-			},
-		});
-
-		if (!subProjects.length) {
-			throw new ApiError("No projects found or access denied", 404);
-		}
+		const subProjects = await getImmediateSubProjectsAndTasks(projectId);
 
 		return apiResponse("Project fetched successfully", 200, { subProjects });
 	}
