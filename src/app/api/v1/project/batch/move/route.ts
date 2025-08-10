@@ -3,7 +3,7 @@ import { batchMoveProjectInputSchema } from "@/zod/project.schema";
 import { asyncHandler } from "@/lib/api/asyncHandler";
 import { apiResponse } from "@/lib/api/ApiResponse";
 import ApiError from "@/lib/api/ApiError";
-import { prisma } from "@/lib/db/db";
+import { prisma } from "@/lib/api/db/db";
 
 export const POST = asyncHandler(async (req: Request) => {
 	const body = await req.json();

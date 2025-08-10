@@ -1,4 +1,3 @@
-import ApiError from "../ApiError";
 import { prisma } from "../db/db";
 
 export const getImmediateSubProjectsAndTasks = async (projectId: string) => {
@@ -6,24 +5,24 @@ export const getImmediateSubProjectsAndTasks = async (projectId: string) => {
 		where: { parentId: projectId },
 		select: {
 			parentId: true,
-			subProjects: {
+			id: true,
+			title: true,
+			tasks: {
 				select: {
 					id: true,
 					title: true,
 				},
 			},
-			tasks: {
+			subProjects: {
 				select: {
 					id: true,
-					title: true,
-					projectId: true,
 				},
 			},
 		},
 	});
 
 	if (!subProjects.length) {
-		throw new ApiError("No projects found or access denied", 404);
+		return [];
 	}
 	return subProjects;
 };

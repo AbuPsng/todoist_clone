@@ -13,10 +13,6 @@ export const middleware = asyncHandler(async (req: Request) => {
 	const cookie = await cookies();
 	const jwtToken = cookie.get("jwtToken");
 
-	console.log(req.url, "-----req-------");
-	console.log(url, "-----url-------");
-	console.log(pathname, "-----pathname-------");
-
 	// 🔒 Protect API routes
 	if (pathname.startsWith("/api/v1")) {
 		if (!jwtToken) throw new ApiError("Unauthorized", 401);

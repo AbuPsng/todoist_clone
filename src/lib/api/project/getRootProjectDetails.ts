@@ -7,7 +7,7 @@ export const getRootProjectDetail = async ({ userId }: { userId: string }) => {
 	try {
 		const rootProject = await prisma.project.findFirst({
 			where: { isRoot: true, ownerId: userId, title: ROOT_PROJECT.name },
-			select: { id: true, ownerId: true },
+			select: { id: true, ownerId: true, title: true },
 		});
 		if (!rootProject) {
 			throw new ApiError("Error while fetching root project data", 400);

@@ -1,9 +1,7 @@
 import { getImmediateSubProjectsAndTasks } from "@/lib/api/project/getImmediateSubProjectsAndTasks";
 import { getAndValidateProjectId } from "@/lib/api/project/getAndValidateProjectId";
-import { getRootProjectDetail } from "@/lib/api/project/getRootProjectDetails";
 import { zodValidateAndParesData } from "@/lib/api/zodValidateAndParesData";
 import { updateProjectInputSchema } from "@/zod/project.schema";
-import { getAuthUser } from "@/lib/api/auth/getAuthUser";
 import { asyncHandler } from "@/lib/api/asyncHandler";
 import { apiResponse } from "@/lib/api/ApiResponse";
 import ApiError from "@/lib/api/ApiError";
@@ -19,7 +17,9 @@ export const GET = asyncHandler(
 
 		const subProjects = await getImmediateSubProjectsAndTasks(projectId);
 
-		return apiResponse("Project fetched successfully", 200, { subProjects });
+		return apiResponse("Project fetched successfully", 200, {
+			subProjects,
+		});
 	}
 );
 

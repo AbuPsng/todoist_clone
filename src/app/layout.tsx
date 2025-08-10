@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { HeroProviders } from "@/providers/HeroProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
@@ -27,8 +28,10 @@ export default function RootLayout({
 	return (
 		<html lang="en" className="scroll-smooth">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				{children}
-				<Toaster position="top-right" />
+				<HeroProviders>
+					{children}
+					<Toaster position="top-right" />
+				</HeroProviders>
 			</body>
 		</html>
 	);

@@ -32,7 +32,7 @@ const AppSidebar = () => {
 								className="cursor-pointer my-1 "
 							>
 								<button className="flex items-center gap-4 px-3 py-2">
-									<Icon className="" /> {/* 👈 Icon size here */}
+									<Icon className="" />
 									<span className=" ">{item.title}</span>
 								</button>
 							</SidebarMenuButton>

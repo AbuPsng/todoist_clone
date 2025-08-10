@@ -45,6 +45,7 @@ export const POST = asyncHandler(async (req: Request) => {
 			title: true,
 			description: true,
 			createdAt: true,
+			parentId: true,
 		},
 	});
 
@@ -56,7 +57,7 @@ export const POST = asyncHandler(async (req: Request) => {
 export const GET = asyncHandler(async (req: Request) => {
 	const currentUser = await getAuthUser();
 
-	const { id: rootProjectId } = await getRootProjectDetail({
+	const rootProject = await getRootProjectDetail({
 		userId: currentUser.id,
 	});
 
@@ -76,9 +77,10 @@ export const GET = asyncHandler(async (req: Request) => {
 	// }
 
 	const rootProjectAndImmediateSubProjectsAndTask =
-		await getImmediateSubProjectsAndTasks(rootProjectId);
+		await getImmediateSubProjectsAndTasks(rootProject.id);
 
 	return apiResponse("Fetched all projects successfully", 200, {
+		rootProject,
 		projects: rootProjectAndImmediateSubProjectsAndTask,
 	});
 });
