@@ -4,11 +4,10 @@ import React from "react";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<section className="w-full h-screen bg-red-50 flex ">
+		<section className="w-full h-screen flex">
 			<SidebarProvider>
-				<main>
-					<AppSidebar />
-					<SidebarTrigger />
+				<AppSidebar />
+				<main className="w-full h-full  flex justify-center items-center">
 					{children}
 				</main>
 			</SidebarProvider>

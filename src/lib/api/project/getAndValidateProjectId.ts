@@ -21,6 +21,8 @@ export const getAndValidateProjectId = async (
 		select: {
 			id: true,
 			ownerId: true,
+			title: true,
+			description: true,
 			isCollaborated: true,
 			subProjects: {
 				select: {

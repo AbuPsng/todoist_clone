@@ -2,7 +2,6 @@ import {
 	ProjectSetSubProjectInputType,
 	StoreProjectType,
 	StoreSubProjectType,
-	StoreTaskType,
 } from "@/types/client/store/project.type";
 import { persist } from "zustand/middleware";
 import { create } from "zustand";
@@ -11,7 +10,6 @@ type ProjectStoreType = {
 	isRootProjectExpanded: boolean;
 	rootProject: StoreProjectType | null;
 	subProjectsMap: Record<string, StoreSubProjectType>;
-	tasksMap: Record<string, StoreTaskType[]>;
 	expandedIds: Set<string>;
 
 	setRootProject: (project: StoreProjectType) => void;
@@ -21,7 +19,7 @@ type ProjectStoreType = {
 		parentId: string,
 		subProjects: StoreSubProjectType[]
 	) => void;
-	setTasks: (projectId: string, tasks: StoreTaskType[]) => void;
+
 	toggleExpanded: (parentId: string) => void;
 	toggleRootProject: () => void;
 	isExpanded: (parentId: string) => boolean;
@@ -39,7 +37,7 @@ export const useProjectStore = create<ProjectStoreType>()(
 			isRootProjectExpanded: false,
 			rootProject: null,
 			subProjectsMap: {},
-			tasksMap: {},
+
 			expandedIds: new Set(),
 
 			setRootProject: (project) => {
@@ -51,23 +49,21 @@ export const useProjectStore = create<ProjectStoreType>()(
 					const cloneSubProjectsMap = { ...state.subProjectsMap };
 
 					const updatedSubProject = {
+						...cloneSubProjectsMap[newSubProject.id],
 						...newSubProject,
 						subProjects: newSubProject.subProjects
-							? newSubProject.subProjects.map((subProject) => subProject.id)
-							: [],
+							? newSubProject.subProjects.map((sub) => sub.id)
+							: cloneSubProjectsMap[newSubProject.id]?.subProjects || [],
 					};
 
-					cloneSubProjectsMap[newSubProject.id] = {
-						...cloneSubProjectsMap[newSubProject.id],
-						...updatedSubProject,
-					};
+					cloneSubProjectsMap[newSubProject.id] = updatedSubProject;
 
 					const parentId = newSubProject.parentId || state.rootProject?.id;
 					if (!parentId) return { subProjectsMap: cloneSubProjectsMap };
 
-					const parent = cloneSubProjectsMap[parentId] || {
-						id: parentId,
-						subProjects: [],
+					const parent = {
+						...cloneSubProjectsMap[parentId],
+						subProjects: cloneSubProjectsMap[parentId]?.subProjects || [],
 					};
 
 					if (!parent.subProjects.includes(newSubProject.id)) {
@@ -76,7 +72,7 @@ export const useProjectStore = create<ProjectStoreType>()(
 
 					cloneSubProjectsMap[parentId] = parent;
 
-					return { subProjectsMap: { ...cloneSubProjectsMap } };
+					return { subProjectsMap: cloneSubProjectsMap };
 				});
 			},
 
@@ -116,15 +112,6 @@ export const useProjectStore = create<ProjectStoreType>()(
 			},
 
 			setManySubProjects: () => {},
-
-			setTasks: (projectId, tasks) => {
-				set((state) => ({
-					tasksMap: {
-						...state.tasksMap,
-						[projectId]: tasks,
-					},
-				}));
-			},
 
 			toggleExpanded: (projectId) => {
 				const current = new Set(get().expandedIds);

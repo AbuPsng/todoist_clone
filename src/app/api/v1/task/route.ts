@@ -1,8 +1,8 @@
 import { createTask, getAllTaskByQuery } from "@/server/services/task.services";
 import { createQueryOptions } from "@/lib/api/task/getQuery.lib";
 import { GetTaskQueryType } from "@/types/services/task.types";
+import { getAuthUser } from "@/lib/api/auth/getAuthUser";
 import { asyncHandler } from "@/lib/api/asyncHandler";
-import { getAuthUser } from "@/lib/auth/getAuthUser";
 import { taskInputSchema } from "@/zod/task.schema";
 import { apiResponse } from "@/lib/api/ApiResponse";
 import ApiError from "@/lib/api/ApiError";

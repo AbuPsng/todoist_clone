@@ -7,7 +7,7 @@ import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
-import ProjectCreateModal from "@/components/modals/projectModals/ProjectCreateModal";
+import ProjectCreateModal from "@/components/modals/projectModals/ProjectModal";
 import SubProject from "./SubProject";
 
 const Projects = () => {
@@ -28,7 +28,7 @@ const Projects = () => {
 		const { rootProject, projects } = data;
 
 		setRootProject(rootProject);
-
+		// console.log(projects, "projects");
 		projects.forEach((project) => {
 			setSubProject(project);
 		});

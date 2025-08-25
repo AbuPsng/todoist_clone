@@ -8,6 +8,12 @@ import {
 export type SidebarChildrenType = {
 	title: string;
 	Icon: ElementType;
+	link: string;
+};
+
+export type SidebarDropdownChildrenType = {
+	title: string;
+	Icon: ElementType;
 };
 
 export type RootProjectAndImmediateProjectAndTask = {

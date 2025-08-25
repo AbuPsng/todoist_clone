@@ -1,9 +1,10 @@
 import { StoreProjectType } from "@/types/client/store/project.type";
+import { StoreTaskType } from "@/types/client/store/task.types";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { axiosInstance } from "@/lib/client/axios.config";
 import { IoIosArrowDown } from "react-icons/io";
-import { Loader } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Dot, Loader } from "lucide-react";
 import { toast } from "sonner";
 
 import SubProjectDropdown from "./SubProjectDropdown";
@@ -22,7 +23,9 @@ const SubProject = ({ id, title }: StoreProjectType) => {
 		}
 
 		try {
-			const { data } = await axiosInstance.get(`/project/${id}`);
+			const { data } = await axiosInstance.get(
+				`/project/${id}/sub_projects_and_tasks`
+			);
 			if (!data.success) {
 				throw new Error("Error while fetching sub projects");
 			}
@@ -55,12 +58,12 @@ const SubProject = ({ id, title }: StoreProjectType) => {
 		};
 
 		fetchSubProjectIfExpanded(id);
-	}, [id]);
+	}, [id, isSubProjectExpanded]);
 
 	return (
-		<div className="pl-2  w-full cursor-pointer rounded-md">
-			<div className=" flex items-center h-8">
-				<div className="flex w-full  items-center justify-between hover:bg-gray-100 ">
+		<div className="pl-1 w-full cursor-pointer rounded-md">
+			<div className=" flex flex-col items-center h-fit">
+				<div className="flex  w-full h-8 items-center justify-between hover:bg-gray-100 ">
 					<h3 className="text-sm">
 						{title ? (
 							<span className="text-sm"> # {title.slice(0, 16)}</span>

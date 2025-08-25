@@ -13,12 +13,14 @@ export const GET = asyncHandler(
 		req: Request,
 		{ params }: { params: Promise<{ projectId: string }> }
 	) => {
-		const { id: projectId } = await getAndValidateProjectId(params);
-
-		const subProjects = await getImmediateSubProjectsAndTasks(projectId);
+		const { id, title, description } = await getAndValidateProjectId(params);
 
 		return apiResponse("Project fetched successfully", 200, {
-			subProjects,
+			project: {
+				id,
+				title,
+				description,
+			},
 		});
 	}
 );

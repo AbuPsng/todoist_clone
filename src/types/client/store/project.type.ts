@@ -1,7 +1,4 @@
-export type StoreTaskType = {
-	id: string;
-	title: string;
-};
+import { StoreTaskType } from "./task.types";
 
 export type StoreProjectType = {
 	id: string;
@@ -12,13 +9,14 @@ export type StoreSubProjectType = {
 	id: string;
 	title: string;
 	parentId?: string;
-	task?: StoreTaskType[];
+	tasks?: StoreTaskType[];
 	subProjects: string[];
 };
 
 export type ProjectSetSubProjectInputType = {
 	id: string;
 	title: string;
+	description?: string;
 	parentId?: string;
 	task?: StoreTaskType[];
 	subProjects?: Record<string, string>[];

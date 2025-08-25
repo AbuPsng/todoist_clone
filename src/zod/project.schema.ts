@@ -5,7 +5,7 @@ export const createProjectInputSchema = z
 		title: z
 			.string()
 			.trim()
-			.min(4, "Project name should at least contain 4 letter"),
+			.min(1, "Project name should at least contain 4 letter"),
 		description: z.string().trim().optional(),
 		parentId: z.string().optional(),
 	})

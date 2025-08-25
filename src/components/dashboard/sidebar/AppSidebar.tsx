@@ -9,13 +9,14 @@ import {
 } from "@/components/ui/sidebar";
 import { SidebarChildrenType } from "@/types/client/dashboard.types";
 import { SIDEBAR_LINK } from "@/const/client/const";
+import Link from "next/link";
 
 import Projects from "./Projects";
 import Navbar from "./Navbar";
 
 const AppSidebar = () => {
 	return (
-		<Sidebar className="bg-red-400">
+		<Sidebar className="w-80">
 			<SidebarHeader className="bg-gray-200">
 				<Navbar />
 			</SidebarHeader>
@@ -24,17 +25,19 @@ const AppSidebar = () => {
 				{/* Navigation */}
 				<SidebarGroup className="w-full px-0">
 					{SIDEBAR_LINK.map((item: SidebarChildrenType) => {
-						const { title, Icon } = item;
+						const { title, Icon, link } = item;
 						return (
 							<SidebarMenuButton
 								key={item.title}
 								asChild
 								className="cursor-pointer my-1 "
 							>
-								<button className="flex items-center gap-4 px-3 py-2">
-									<Icon className="" />
-									<span className=" ">{item.title}</span>
-								</button>
+								<Link href={`${link}`} className="w-full px-0">
+									<button className="flex items-center gap-4 px-3 py-2 w-full">
+										<Icon className="h-4 w-4" />
+										<span>{item.title}</span>
+									</button>
+								</Link>
 							</SidebarMenuButton>
 						);
 					})}
